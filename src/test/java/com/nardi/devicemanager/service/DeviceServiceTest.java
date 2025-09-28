@@ -2,6 +2,7 @@ package com.nardi.devicemanager.service;
 
 import com.nardi.devicemanager.entity.Device;
 import com.nardi.devicemanager.entity.DeviceState;
+import com.nardi.devicemanager.exception.DeviceNotFoundException;
 import com.nardi.devicemanager.repository.DeviceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,23 +56,19 @@ class DeviceServiceTest {
         when(deviceRepository.findById(1L)).thenReturn(Optional.of(device));
         
 		// Act
-        Optional<Device> result = deviceService.getDevice(1L);
+        Device result = deviceService.getDevice(1L);
         
 		// Assert
-        assertTrue(result.isPresent());
-        assertEquals(1L, result.get().getId());
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
     }
 
     @Test
     void getDevice_returnsEmptyIfNotExists() {
         // Arrange
         when(deviceRepository.findById(2L)).thenReturn(Optional.empty());
-        
-		// Act
-        Optional<Device> result = deviceService.getDevice(2L);
-        
-		// Assert
-        assertFalse(result.isPresent());
+        // Act & Assert
+        assertThrows(DeviceNotFoundException.class, () -> deviceService.getDevice(2L));
     }
 
     @Test
@@ -138,20 +135,6 @@ class DeviceServiceTest {
     }
 
     @Test
-    void updateDevice_throwsIfCreationTimeChanged() {
-        // Arrange
-        Device existing = new Device();
-        existing.setId(1L);
-        existing.setCreationTime(LocalDateTime.now());
-        Device update = new Device();
-        update.setCreationTime(existing.getCreationTime().plusDays(1));
-        when(deviceRepository.findById(1L)).thenReturn(Optional.of(existing));
-        
-		// Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> deviceService.updateDevice(1L, update, true));
-    }
-
-    @Test
     void updateDevice_throwsIfInUseAndNameOrBrandChanged() {
         // Arrange
         Device existing = new Device();
@@ -202,8 +185,7 @@ class DeviceServiceTest {
     void deleteDevice_throwsIfNotFound() {
         // Arrange
         when(deviceRepository.findById(1L)).thenReturn(Optional.empty());
-        
-		// Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> deviceService.deleteDevice(1L));
+        // Act & Assert
+        assertThrows(DeviceNotFoundException.class, () -> deviceService.deleteDevice(1L));
     }
 }

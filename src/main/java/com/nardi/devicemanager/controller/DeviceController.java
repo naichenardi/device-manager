@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,9 +32,8 @@ public class DeviceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DeviceResponse> getDevice(@PathVariable Long id) {
-        Optional<Device> device = deviceService.getDevice(id);
-        return device.map(value -> ResponseEntity.ok(toResponse(value)))
-                .orElse(ResponseEntity.notFound().build());
+        Device device = deviceService.getDevice(id);
+        return ResponseEntity.ok(toResponse(device));
     }
 
     @GetMapping
@@ -52,16 +50,20 @@ public class DeviceController {
 
     @PutMapping("/{id}")
     public ResponseEntity<DeviceResponse> updateDevice(@PathVariable Long id, @RequestBody DeviceRequest request) {
+        Device existingOpt = deviceService.getDevice(id);
         Device device = toEntity(request);
         device.setId(id);
+        device.setCreationTime(existingOpt.getCreationTime());
         Device updated = deviceService.updateDevice(id, device, false);
         return ResponseEntity.ok(toResponse(updated));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<DeviceResponse> partialUpdateDevice(@PathVariable Long id, @RequestBody DeviceRequest request) {
+        Device existingOpt = deviceService.getDevice(id);
         Device device = toEntity(request);
         device.setId(id);
+        device.setCreationTime(existingOpt.getCreationTime());
         Device updated = deviceService.updateDevice(id, device, true);
         return ResponseEntity.ok(toResponse(updated));
     }
@@ -90,4 +92,3 @@ public class DeviceController {
         return response;
     }
 }
-

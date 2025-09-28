@@ -2,6 +2,7 @@ package com.nardi.devicemanager.service;
 
 import com.nardi.devicemanager.entity.Device;
 import com.nardi.devicemanager.entity.DeviceState;
+import com.nardi.devicemanager.exception.DeviceNotFoundException;
 import com.nardi.devicemanager.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DeviceService {
@@ -26,8 +26,9 @@ public class DeviceService {
         return deviceRepository.save(device);
     }
 
-    public Optional<Device> getDevice(Long id) {
-        return deviceRepository.findById(id);
+    public Device getDevice(Long id) {
+        return deviceRepository.findById(id)
+                .orElseThrow(() -> new DeviceNotFoundException(id));
     }
 
     public List<Device> getAllDevices() {
@@ -44,11 +45,8 @@ public class DeviceService {
 
     @Transactional
     public Device updateDevice(Long id, Device updatedDevice, boolean partial) {
-        Device existing = deviceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Device not found"));
-        if (!existing.getCreationTime().equals(updatedDevice.getCreationTime())) {
-            throw new IllegalArgumentException("Creation time cannot be updated");
-        }
+        Device existing = getDevice(id);
+
         if (existing.getState() == DeviceState.IN_USE) {
             if (!existing.getName().equals(updatedDevice.getName()) ||
                 !existing.getBrand().equals(updatedDevice.getBrand())) {
@@ -58,13 +56,13 @@ public class DeviceService {
         if (!partial || updatedDevice.getName() != null) existing.setName(updatedDevice.getName());
         if (!partial || updatedDevice.getBrand() != null) existing.setBrand(updatedDevice.getBrand());
         if (!partial || updatedDevice.getState() != null) existing.setState(updatedDevice.getState());
-        // creationTime is not updated
+
         return deviceRepository.save(existing);
     }
 
     public void deleteDevice(Long id) {
         Device device = deviceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Device not found"));
+                .orElseThrow(() -> new DeviceNotFoundException(id));
         if (device.getState() == DeviceState.IN_USE) {
             throw new IllegalArgumentException("In use devices cannot be deleted");
         }
