@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: device-manager
+server:
+  port: 8080
