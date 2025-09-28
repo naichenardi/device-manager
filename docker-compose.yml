@@ -13,5 +13,19 @@ services:
       - "3306:3306"
     volumes:
       - mysqldata:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: devicemanager-app
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/devicemanager
+      SPRING_DATASOURCE_USERNAME: devicemanager_user
+      SPRING_DATASOURCE_PASSWORD: N7v$k2!pQz8@wL1rT6#eX9sB4^uJ0mYd
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
 volumes:
   mysqldata:

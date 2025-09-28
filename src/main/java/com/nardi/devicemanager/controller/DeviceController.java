@@ -13,6 +13,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Future improvements:
+// - Add validation for DeviceRequest using @Valid and handle validation errors.
+// - Use a mapping library (e.g., MapStruct) for DTO/entity conversion.
+// - Add pagination to getAllDevices.
+// - Add API documentation (Swagger/OpenAPI).
+// - Add authentication and authorization.
+// - Improve error responses with standardized format.
+// - Add logging for important actions and errors.
+
 @RestController
 @RequestMapping("/api/devices")
 public class DeviceController {
