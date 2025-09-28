@@ -118,8 +118,6 @@ This project uses GitHub Actions for continuous integration. Every time you push
 
 You can find the workflow configuration in `.github/workflows/build.yml`. Build and test results will be visible on the GitHub repository under the [Actions tab](https://github.com/naichenardi/device-manager/actions).
 
-Replace `<OWNER>` and `<REPO>` with your GitHub username/organization and repository name.
-
 ## Contributing
 
 Contributions are welcome! Please open issues or submit pull requests for improvements or bug fixes.
