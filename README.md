@@ -107,6 +107,19 @@ Or on Windows:
 gradlew.bat test
 ```
 
+## Continuous Integration (CI) with GitHub Actions
+
+This project uses GitHub Actions for continuous integration. Every time you push a commit or open a pull request to the `master` branch, an automated workflow will:
+
+- Check out the repository code
+- Set up JDK 21
+- Build the project using Gradle
+- Run all tests
+
+You can find the workflow configuration in `.github/workflows/build.yml`. Build and test results will be visible on the GitHub repository under the [Actions tab](https://github.com/naichenardi/device-manager/actions).
+
+Replace `<OWNER>` and `<REPO>` with your GitHub username/organization and repository name.
+
 ## Contributing
 
 Contributions are welcome! Please open issues or submit pull requests for improvements or bug fixes.
