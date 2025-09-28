@@ -38,6 +38,7 @@ tasks.named('test') {
         exceptionFormat "full"
         showStandardStreams = true
     }
+    jvmArgs "-XX:+EnableDynamicAgentLoading"
 }
 
 jacocoTestReport {
@@ -52,7 +53,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.1
+                minimum = 0.8
             }
         }
     }
