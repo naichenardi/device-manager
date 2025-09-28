@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: devicemanager-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: devicemanager
+      MYSQL_USER: devicemanager_user
+      MYSQL_PASSWORD: N7v$k2!pQz8@wL1rT6#eX9sB4^uJ0mYd
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+volumes:
+  mysqldata:
